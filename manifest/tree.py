@@ -1,10 +1,14 @@
 import os
-from cStringIO import StringIO
 from fnmatch import fnmatch
 
-import vcs
-from log import get_logger
-from utils import is_blacklisted, rel_path_to_url
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
+
+from . import vcs
+from .log import get_logger
+from .utils import is_blacklisted, rel_path_to_url
 
 def chunks(data, n):
     for i in range(0, len(data) - 1, n):

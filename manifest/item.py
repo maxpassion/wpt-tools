@@ -1,8 +1,12 @@
 import os
-import urlparse
 from abc import ABCMeta, abstractmethod, abstractproperty
 
-from utils import from_os_path, to_os_path
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin
+
+from .utils import from_os_path, to_os_path
 
 item_types = ["testharness", "reftest", "manual", "stub", "wdspec"]
 
@@ -82,7 +86,7 @@ class URLManifestItem(ManifestItem):
 
     @property
     def url(self):
-        return urlparse.urljoin(self.url_base, self._url)
+        return urljoin(self.url_base, self._url)
 
     def to_json(self):
         rv = ManifestItem.to_json(self)
@@ -134,7 +138,7 @@ class RefTest(URLManifestItem):
         URLManifestItem.__init__(self, source_file, url, url_base=url_base, manifest=manifest)
         for _, ref_type in references:
             if ref_type not in ["==", "!="]:
-                raise ValueError, "Unrecognised ref_type %s" % ref_type
+                raise ValueError("Unrecognised ref_type %s" % ref_type)
         self.references = tuple(references)
         self.timeout = timeout
 

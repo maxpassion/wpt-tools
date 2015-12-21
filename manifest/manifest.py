@@ -2,10 +2,10 @@ import json
 import os
 from collections import defaultdict
 
-from item import item_types, ManualTest, WebdriverSpecTest, Stub, RefTest, TestharnessTest
-from log import get_logger
-from sourcefile import SourceFile
-from utils import from_os_path, to_os_path
+from .item import item_types, ManualTest, WebdriverSpecTest, Stub, RefTest, TestharnessTest
+from .log import get_logger
+from .sourcefile import SourceFile
+from .utils import from_os_path, to_os_path
 
 
 CURRENT_VERSION = 2

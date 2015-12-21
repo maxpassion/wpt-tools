@@ -26,8 +26,8 @@ def git(command, *args):
 
 
 def iter_files():
-    for item in git("ls-tree", "-r", "--name-only", "HEAD").split("\n"):
-        yield item
+    for item in git("ls-tree", "-r", "--name-only", "HEAD").split(b"\n"):
+        yield item.decode('utf-8')
 
 
 def check_path_length(path):
@@ -56,9 +56,9 @@ def parse_whitelist_file(filename):
             data[file_match][error_type].add(line_number)
 
     def inner(path, errors):
-        whitelisted = [False for item in xrange(len(errors))]
+        whitelisted = [False for item in range(len(errors))]
 
-        for file_match, whitelist_errors in data.iteritems():
+        for file_match, whitelist_errors in data.items():
             if fnmatch.fnmatch(path, file_match):
                 for i, (error_type, msg, line) in enumerate(errors):
                     if "*" in whitelist_errors:
@@ -96,32 +96,32 @@ class Regexp(object):
         return self._re.search(line)
 
 class TrailingWhitespaceRegexp(Regexp):
-    pattern = "[ \t\f\v]$"
+    pattern = b"[ \t\f\v]$"
     error = "TRAILING WHITESPACE"
 
 class TabsRegexp(Regexp):
-    pattern = "^\t"
+    pattern = b"^\t"
     error = "INDENT TABS"
 
 class CRRegexp(Regexp):
-    pattern = "\r$"
+    pattern = b"\r$"
     error = "CR AT EOL"
 
 class W3CTestOrgRegexp(Regexp):
-    pattern = "w3c\-test\.org"
+    pattern = b"w3c\-test\.org"
     error = "W3C-TEST.ORG"
 
 class Webidl2Regexp(Regexp):
-    pattern = "webidl2\.js"
+    pattern = b"webidl2\.js"
     error = "WEBIDL2.JS"
 
 class ConsoleRegexp(Regexp):
-    pattern = "console\.[a-zA-Z]+\s*\("
+    pattern = b"console\.[a-zA-Z]+\s*\("
     error = "CONSOLE"
     file_extensions = [".html", ".htm", ".js", ".xht", ".html", ".svg"]
 
 class PrintRegexp(Regexp):
-    pattern = "print(?:\s|\s*\()"
+    pattern = b"print(?:\s|\s*\()"
     error = "PRINT STATEMENT"
     file_extensions = [".py"]
 
@@ -197,7 +197,7 @@ def check_parsed(path, f):
                          "testharnessreport": False}
         required_elements = [key for key, value in {"testharness": True,
                                                     "testharnessreport": len(testharnessreport_nodes) > 0,
-                                                    "timeout": len(source_file.timeout_nodes) > 0}.iteritems()
+                                                    "timeout": len(source_file.timeout_nodes) > 0}.items()
                              if value]
 
         for elem in source_file.root.iter():
@@ -223,18 +223,18 @@ def check_parsed(path, f):
 
 def output_errors(errors):
     for error_type, error, line_number in errors:
-        print "%s: %s" % (error_type, error)
+        print("%s: %s" % (error_type, error))
 
 def output_error_count(error_count):
     if not error_count:
         return
 
-    by_type = " ".join("%s: %d" % item for item in error_count.iteritems())
+    by_type = " ".join("%s: %d" % item for item in error_count.items())
     count = sum(error_count.values())
     if count == 1:
-        print "There was 1 error (%s)" % (by_type,)
+        print("There was 1 error (%s)" % (by_type,))
     else:
-        print "There were %d errors (%s)" % (count, by_type)
+        print("There were %d errors (%s)" % (count, by_type))
 
 def main():
     error_count = defaultdict(int)
@@ -258,27 +258,27 @@ def main():
             last = run_lint(path, path_fn, last)
 
         if not os.path.isdir(abs_path):
-            with open(abs_path) as f:
+            with open(abs_path, 'rb') as f:
                 for file_fn in file_lints:
                     last = run_lint(path, file_fn, last, f)
                     f.seek(0)
 
     output_error_count(error_count)
     if error_count:
-        print
-        print "You must fix all errors; for details on how to fix them, see"
-        print "https://github.com/w3c/web-platform-tests/blob/master/docs/lint-tool.md"
-        print
-        print "However, instead of fixing a particular error, it's sometimes"
-        print "OK to add a line to the lint.whitelist file in the root of the"
-        print "web-platform-tests directory to make the lint tool ignore it."
-        print
-        print "For example, to make the lint tool ignore all '%s'" % last[0]
-        print "errors in the %s file," %  last[1]
-        print "you could add the following line to the lint.whitelist file."
-        print
-        print "%s:%s" % (last[0], last[1])
-    return sum(error_count.itervalues())
+        print()
+        print("You must fix all errors; for details on how to fix them, see")
+        print("https://github.com/w3c/web-platform-tests/blob/master/docs/lint-tool.md")
+        print()
+        print("However, instead of fixing a particular error, it's sometimes")
+        print("OK to add a line to the lint.whitelist file in the root of the")
+        print("web-platform-tests directory to make the lint tool ignore it.")
+        print()
+        print("For example, to make the lint tool ignore all '%s'" % last[0])
+        print("errors in the %s file," %  last[1])
+        print("you could add the following line to the lint.whitelist file.")
+        print()
+        print("%s:%s" % (last[0], last[1]))
+    return sum(error_count.values())
 
 path_lints = [check_path_length]
 file_lints = [check_regexp_line, check_parsed]

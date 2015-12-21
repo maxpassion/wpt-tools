@@ -1,6 +1,9 @@
 import os
-import urlparse
-from StringIO import StringIO
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 blacklist = ["/", "/tools/", "/resources/", "/common/", "/conformance-checkers/", "_certs"]
 
