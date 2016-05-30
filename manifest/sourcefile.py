@@ -316,4 +316,11 @@ class SourceFile(object):
             # If nothing else it's a helper file, which we don't have a specific type for
             rv = []
 
+        if rv:
+            for test in rv:
+                if self.root:
+                    if self.root.findall(".//{http://www.w3.org/1999/xhtml}meta[@name='spec_version']"):
+                        test.spec_version = self.root.findall(".//{http://www.w3.org/1999/xhtml}meta[@name='spec_version']")[0].attrib.get("content", None)
+
+
         return rv

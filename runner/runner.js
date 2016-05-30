@@ -119,7 +119,12 @@ ManifestIterator.prototype = {
         if (manifest_item.hasOwnProperty("ref_url")) {
             test.ref_type = manifest_item.ref_type;
             test.ref_url = manifest_item.ref_url;
-        }
+        };
+        if (manifest_item.spec_version){
+            test.spec_version = manifest_item.spec_version;
+        } else{
+            test.spec_version = "";
+        };
         return test;
     },
 
@@ -258,6 +263,9 @@ VisualOutput.prototype = {
                 subtests_node.textContent = "0/1";
             }
         }
+
+        var spec_version_node = row.appendChild(document.createElement("td"));
+        spec_version_node.textContent = test.spec_version;
 
         var status_arr = ["PASS", "FAIL", "ERROR", "TIMEOUT", "NOTRUN"];
         for (var i = 0; i < status_arr.length; i++) {
