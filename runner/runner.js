@@ -120,11 +120,16 @@ ManifestIterator.prototype = {
             test.ref_type = manifest_item.ref_type;
             test.ref_url = manifest_item.ref_url;
         };
-        if (manifest_item.spec_version){
-            test.spec_version = manifest_item.spec_version;
+        if (manifest_item.first_version){
+            test.first_version = manifest_item.first_version;
         } else{
-            test.spec_version = "";
+            test.first_version = "";
         };
+	if (manifest_item.last_version){
+	    test.last_version = manifest_item.last_version;
+	} else{
+	    test.last_version = "";
+	}
         return test;
     },
 
@@ -264,8 +269,11 @@ VisualOutput.prototype = {
             }
         }
 
-        var spec_version_node = row.appendChild(document.createElement("td"));
-        spec_version_node.textContent = test.spec_version;
+        var first_version_node = row.appendChild(document.createElement("td"));
+        first_version_node.textContent = test.first_version;
+
+	var last_version_node = row.appendChild(document.createElement("td"));
+	last_version_node.textContent = test.last_version;
 
         var status_arr = ["PASS", "FAIL", "ERROR", "TIMEOUT", "NOTRUN"];
         for (var i = 0; i < status_arr.length; i++) {
