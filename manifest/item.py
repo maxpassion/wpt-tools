@@ -27,7 +27,8 @@ class ManifestItem(object):
 
     item_type = None
 
-    spec_version = None
+    first_version = None
+    last_version = None
 
 
     def __init__(self, source_file, manifest=None):
@@ -93,8 +94,10 @@ class URLManifestItem(ManifestItem):
     def to_json(self):
         rv = ManifestItem.to_json(self)
         rv["url"] = self._url
-        if self.spec_version:
-            rv["spec_version"] = self.spec_version
+        if self.first_version:
+	    rv["first_version"] = self.first_version
+	if self.last_version:
+	    rv["last_version"] = self.last_version
         return rv
 
     @classmethod
@@ -121,8 +124,10 @@ class TestharnessTest(URLManifestItem):
         rv = URLManifestItem.to_json(self)
         if self.timeout is not None:
             rv["timeout"] = self.timeout
-        if self.spec_version:
-            rv["spec_version"] = self.spec_version
+        if self.first_version:
+	    rv["first_version"] = self.first_version
+	if self.last_version:
+	    rv["last_version"] = self.last_version
         return rv
 
     @classmethod
@@ -166,8 +171,10 @@ class RefTest(URLManifestItem):
             rv["viewport_size"] = self.viewport_size
         if self.dpi is not None:
             rv["dpi"] = self.dpi
-        if self.spec_version:
-            rv["spec_version"] = self.spec_version
+        if self.first_version:
+	    rv["first_version"] = self.first_version
+	if self.last_version:
+	    rv["last_version"] = self.last_version
         return rv
 
     @classmethod

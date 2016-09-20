@@ -319,9 +319,15 @@ class SourceFile(object):
         if rv:
             for test in rv:
                 if self.root:
-                    if self.root.findall(".//{http://www.w3.org/1999/xhtml}meta[@name='spec_version']"):
-                        test.spec_version = self.root.findall(
-                            ".//{http://www.w3.org/1999/xhtml}meta[@name='spec_version']")[0].attrib.get("content", None)
+                    if self.root.findall(".//{http://www.w3.org/1999/xhtml}meta[@name='first_version']"):
+                        test.first_version = self.root.findall(
+                            ".//{http://www.w3.org/1999/xhtml}meta[@name='first_version']")[0].attrib.get("content", None)
+
+	if rv:
+	    for test in rv:
+		if self.root:
+		    if self.root.findall(".//{http://www.w3.org/1999/xhtml}meta[@name='last_version']"):
+			test.last_version = self.root.findall(".//{http://www.w3.org/1999/xhtml}meta[@name='last_version']")[0].attrib.get("content", None)
 
 
         return rv
